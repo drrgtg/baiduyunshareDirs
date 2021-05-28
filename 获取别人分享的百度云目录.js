@@ -29,7 +29,7 @@ $(function(){
                         // 将当前文件信息追加至z
                         path.push(z);
                         // 输出信息
-                        console.log("|" + fuhao + z.server_filename + "文件大小：" + z.size.toFixed(2) + "MB");
+                        console.log("|" + fuhao + z.server_filename + "  【文件大小：" + z.size.toFixed(2) + "MB】");
                         // 转义字符串，防止出现特殊字符出错
                         // dir(encodeURIComponent(z.path),fuhao);
                     } else {
