@@ -24,10 +24,12 @@ $(function(){
                         z.path = list[m].path;
                         // 文件创建时间
                         z.server_ctime = list[m].server_ctime;
+                        // 文件大小
+                        z.size = list[m].size/(1024*1024)
                         // 将当前文件信息追加至z
                         path.push(z);
                         // 输出信息
-                        console.log("|" + fuhao + z.server_filename);
+                        console.log("|" + fuhao + z.server_filename + "文件大小：" + z.size.toFixed(2) + "MB");
                         // 转义字符串，防止出现特殊字符出错
                         // dir(encodeURIComponent(z.path),fuhao);
                     } else {
@@ -50,7 +52,3 @@ $(function(){
     }
     dir("/sharelink1627575672-952136523176058%2F01.《2021一级建造师》--公众号：【96建造师】+免费更新","");
 })
-
-
-
-
