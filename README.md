@@ -10,5 +10,8 @@
 
 ### 5.然后将整段js代码复制到console，回车后等待文件下载即可
 
+### 6.下载完成后的txt文件内容如下图
+![image](https://user-images.githubusercontent.com/15123605/120133683-2a928a00-c1ff-11eb-8de1-7ead0d70bebe.png)
+
 #### PS: 目录过多网页可能会卡顿，别关闭网页，请静静等待
 
