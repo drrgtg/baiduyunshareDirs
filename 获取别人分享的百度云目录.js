@@ -64,7 +64,7 @@ $(function(){
                         if (data.has_more == 1) {
                             let pageNum = getQueryVariable(realUrl, "page");
                             let nextPage = parseInt(pageNum) + 1;
-                            var tempPageA = realUrl.split("page="+pageNum);
+                            var tempPageA = realUrl.split("page="+nextPage);
                             let bn = tempPageA[0];
                             let en = tempPageA[1];
                             realUrl = bn + "page=" + nextPage + en;
