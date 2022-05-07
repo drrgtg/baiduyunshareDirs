@@ -63,7 +63,7 @@ $(function(){
                         totalStr += "|" + fuhao + z.server_filename + "\r\n"
                         if (data.has_more == 1) {
                             let pageNum = getQueryVariable(realUrl, "page");
-                            let nextPage = pageNum + 1;
+                            let nextPage = parseInt(pageNum) + 1;
                             var tempPageA = realUrl.split("page="+pageNum);
                             let bn = tempPageA[0];
                             let en = tempPageA[1];
