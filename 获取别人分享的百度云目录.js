@@ -1,6 +1,6 @@
 $(function(){
     
-    let baiduPath = "https://pan.baidu.com/share/list?uk=3253638235&shareid=2931971488&order=other&desc=1&showempty=0&web=1&page=1&num=100&dir=%2Fsharelink3253638235-122627231427974%2F3、补充资料-历年试题&t=0.14375705411442619&channel=chunlei&web=1&app_id=250528&bdstoken=731f1cf2f5e4f5338032ccc9f83fad85&logid=NjBFRDEzMDIzRTUxOUVFMzg5NjdEMDcyMjFCMzNCQkQ6Rkc9MQ==&clienttype=0";
+    let baiduPath = "https://pan.baidu.com/mbox/msg/shareinfo?msg_id=3756372419682316637&page=1&from_uk=619491747&gid=757943779352721904&type=2&fs_id=320430392464938&num=50&bdstoken=f2fc63c28721a69613bb05e5e6445da6&channel=chunlei&web=1&app_id=250528&logid=MTY1MTg4NjA1NTIwMDAuOTY1NTIzNzAwNzc1Njg4&clienttype=0";
     // 此操作需在控制台进行，本地或非百度云盘域名执行会报跨域错误
     // 主目录名称存为数组
     var path = [];
@@ -19,16 +19,18 @@ $(function(){
     var beganUrl = "";
     var endedUrl = "";
     var middleUrl = "";
+    var realUrl = "";
     function dir(url,fuhao){
         fuhao += "——";
+        console.log(url);
         $.ajax({
             // 百度网盘接口
             // 路径请点击分享链接的networking获取，只需更改dir即可
-            url: beganUrl + url + endedUrl,
+            url: url,
             dataType:"json",
             async:false,
             success:function(data){
-                var list = data.list;
+                var list = data.records;
                 // 循环列表
                 for(var m = 0;m < list.length;m++){
                     z = {};
@@ -59,35 +61,46 @@ $(function(){
                         // 输出信息
                         // console.log("|" + fuhao + z.server_filename);
                         totalStr += "|" + fuhao + z.server_filename + "\r\n"
-                        // 转义字符串，防止出现特殊字符出错
-                        console.log("/");
-                        dir(encodeURIComponent(z.path),fuhao);
+                        if (data.has_more == 1) {
+                            let pageNum = getQueryVariable(realUrl, "page");
+                            let nextPage = pageNum + 1;
+                            var tempPageA = realUrl.split("page="+pageNum);
+                            let bn = tempPageA[0];
+                            let en = tempPageA[1];
+                            realUrl = bn + "page=" + nextPage + en;
+                        } else {
+                            console.log("/");
+                             middleUrl = list[m].fs_id
+                             realUrl = beganUrl + middleUrl + endedUrl;
+                        }
+                        dir(realUrl,fuhao);
                     }
                 }
             }
         });
     }
     function fakeClick(obj) {
-      var ev = document.createEvent("MouseEvents");
-      ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      obj.dispatchEvent(ev);
+      var ev = document.createEvent("MouseEvents");
+      ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      obj.dispatchEvent(ev);
     }
     function exportRaw(name, data) {
-      var urlObject = window.URL || window.webkitURL || window;
-      var export_blob = new Blob([data]);
-      var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
-      save_link.href = urlObject.createObjectURL(export_blob);
-      save_link.download = name;
-      fakeClick(save_link);
+      var urlObject = window.URL || window.webkitURL || window;
+      var export_blob = new Blob([data]);
+      var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+      save_link.href = urlObject.createObjectURL(export_blob);
+      save_link.download = name;
+      fakeClick(save_link);
     }
     var realPath = decodeURIComponent(baiduPath);
-    middleUrl = getQueryVariable(realPath, "dir");
+    middleUrl = getQueryVariable(realPath, "fs_id");
     //  切割字符串
     var tempArr = realPath.split(middleUrl);
     beganUrl = tempArr[0];
     endedUrl = tempArr[1];
-    dir(middleUrl,"");
+    realUrl = beganUrl + middleUrl + endedUrl;
+    dir(realUrl,"");
     console.log(totalStr)
     // console.log(path)
-    exportRaw('exportDirList.txt',totalStr)       
+    exportRaw('exportDirList.txt',totalStr)       
 })
