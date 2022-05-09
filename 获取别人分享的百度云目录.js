@@ -1,6 +1,6 @@
-$(function(){
+　$(function(){
     
-    let baiduPath = "https://pan.baidu.com/mbox/msg/shareinfo?msg_id=3756372419682316637&page=1&from_uk=619491747&gid=757943779352721904&type=2&fs_id=320430392464938&num=50&bdstoken=f2fc63c28721a69613bb05e5e6445da6&channel=chunlei&web=1&app_id=250528&logid=MTY1MTg4NjA1NTIwMDAuOTY1NTIzNzAwNzc1Njg4&clienttype=0";
+    let baiduPath = "https://pan.baidu.com/mbox/msg/shareinfo?msg_id=3756372419682316637&page=1&from_uk=619491747&gid=757943779352721904&type=2&fs_id=1006582882875880&num=50&bdstoken=f2fc63c28721a69613bb05e5e6445da6&channel=chunlei&web=1&app_id=250528&logid=MTY1MjA2NTcyODk5NzAuNTAwMTQ4NDU0NjM5NjYyNA==&clienttype=0";
     // 此操作需在控制台进行，本地或非百度云盘域名执行会报跨域错误
     // 主目录名称存为数组
     var path = [];
@@ -31,6 +31,15 @@ $(function(){
             async:false,
             success:function(data){
                 var list = data.records;
+                if (data.has_more == 1) {
+                    let pageNum = getQueryVariable(realUrl, "page");
+                    let nextPage = parseInt(pageNum) + 1;
+                    var tempPageA = realUrl.split("page="+pageNum);
+                    let bn = tempPageA[0];
+                    let en = tempPageA[1];
+                    realUrl = bn + "page=" + nextPage + en;
+                    dir(realUrl,fuhao);
+                }
                 // 循环列表
                 for(var m = 0;m < list.length;m++){
                     z = {};
@@ -61,18 +70,8 @@ $(function(){
                         // 输出信息
                         // console.log("|" + fuhao + z.server_filename);
                         totalStr += "|" + fuhao + z.server_filename + "\r\n"
-                        if (data.has_more == 1) {
-                            let pageNum = getQueryVariable(realUrl, "page");
-                            let nextPage = parseInt(pageNum) + 1;
-                            var tempPageA = realUrl.split("page="+pageNum);
-                            let bn = tempPageA[0];
-                            let en = tempPageA[1];
-                            realUrl = bn + "page=" + nextPage + en;
-                        } else {
-                            console.log("/");
-                             middleUrl = list[m].fs_id
-                             realUrl = beganUrl + middleUrl + endedUrl;
-                        }
+                         middleUrl = list[m].fs_id
+                         realUrl = beganUrl + middleUrl + endedUrl;
                         dir(realUrl,fuhao);
                     }
                 }
